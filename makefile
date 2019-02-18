@@ -10,17 +10,23 @@ CFLAGS := -fcolor-diagnostics -I include -fcxx-exceptions -fdeclspec \
 -gcodeview -gmodules -fdebug-info-for-profiling -faligned-allocation
 
 LIBRARIES := -lpthread -lm
+LINKEROPTS := -Xlinker --print-map -Xlinker --trace
 
-LFLAGS := $(LIBRARIES) -Xlinker --print-map -Xlinker --trace
+LFLAGS := $(LIBRARIES)
+
+SRCS := Bool.cpp Error.cpp main.cpp
+OBJS := Bool.o Error.o main.o
+#OBJS := $(patsubst(%.cpp, %.o, $(SRCS))
 
 PROGRAM := PosixTest
 
+.PHONY: all
 all: $(PROGRAM)
 
-$(PROGRAM): main.o
+$(PROGRAM): $(OBJS)
 	$(CC) -o $@ $^ $(LFLAGS)
 
-main.o: main.cpp
+%.o: %.cpp 
 	$(CC) $(CFLAGS) -c -o $@ $^
 
 clean:
