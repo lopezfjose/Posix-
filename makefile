@@ -9,7 +9,7 @@ CFLAGS := -fcolor-diagnostics -I include -fcxx-exceptions -fdeclspec \
 -fseh-exceptions -gdwarf-5 -g -pipe -pthread  -save-stats -std=c++17 -x c++ \
 -gcodeview -gmodules -fdebug-info-for-profiling -faligned-allocation
 
-LIBRARIES := -lpthread -lm
+LIBRARIES := -lpthread -lm -lboost_program_options
 LINKEROPTS := -Xlinker --print-map -Xlinker --trace
 
 LFLAGS := $(LIBRARIES)
