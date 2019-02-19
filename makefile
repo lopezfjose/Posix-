@@ -1,33 +1,31 @@
 
-vpath %.cpp src
+vpath %.c src
 vpath %.h include
 
-CC := clang++
+CC := gcc
 
-CFLAGS := -fcolor-diagnostics -I include -fcxx-exceptions -fdeclspec \
--fdebug-info-for-profiling -fdebug-macro -fdouble-square-bracket-attributes \
--fseh-exceptions -gdwarf-5 -g -pipe -pthread  -save-stats -std=c++17 -x c++ \
--gcodeview -gmodules -fdebug-info-for-profiling -faligned-allocation
+CFLAGS := -g -std=c11
+CPPFLAGS := -I include
+LFLAGS := -lm -lpthread
 
-LIBRARIES := -lpthread -lm -lboost_program_options
-LINKEROPTS := -Xlinker --print-map -Xlinker --trace
+PROGRAM := pt
 
-LFLAGS := $(LIBRARIES)
-
-SRCS := Bool.cpp Error.cpp main.cpp
-OBJS := Bool.o Error.o main.o
-#OBJS := $(patsubst(%.cpp, %.o, $(SRCS))
-
-PROGRAM := PosixTest
-
-.PHONY: all
 all: $(PROGRAM)
 
-$(PROGRAM): $(OBJS)
-	$(CC) -o $@ $^ $(LFLAGS)
+$(PROGRAM): build_msg main.o
+	$(CC) $(CFLAGS) $(CPPFLAGS) -o $(PROGRAM) main.o $(LFLAGS)
 
-%.o: %.cpp 
-	$(CC) $(CFLAGS) -c -o $@ $^
+main.o: main.c
+	$(CC) $(CFLAGS) $(CPPFLAGS) -c -o main.o $<
 
+.PHONY: build_msg
+build_msg:
+	@printf "#\n# Building $(PROGRAM)\n#\n"
+
+.PHONY: vcs
+vcs:
+	git status -u
+
+.PHONY: clean
 clean:
 	rm -rf *.o $(PROGRAM)
